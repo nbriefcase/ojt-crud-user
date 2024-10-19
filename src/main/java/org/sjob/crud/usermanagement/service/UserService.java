@@ -1,6 +1,5 @@
 package org.sjob.crud.usermanagement.service;
 
-import org.sjob.crud.usermanagement.dto.DtoUser;
 import org.sjob.crud.usermanagement.entity.User;
 
 import java.util.List;
@@ -19,5 +18,5 @@ public interface UserService {
 
     boolean deleteById(String id);
 
-    Optional<List<DtoUser>> findAll();
+    Optional<List<User>> findAll();
 }

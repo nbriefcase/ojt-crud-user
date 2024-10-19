@@ -1,4 +1,4 @@
-package org.sjob.crud.usermanagement.dto;
+package org.sjob.crud.usermanagement.dto.reponse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DtoUserPhone {
+public class DtoUserPhoneResponse {
     private UUID id;
     private String number;
     @JsonProperty(value = "citycode")
@@ -21,17 +21,8 @@ public class DtoUserPhone {
     @JsonProperty(value = "countrycode")
     private String countryCode;
 
-    public static DtoUserPhone fromEntity(UserPhone userPhone) {
-        return DtoUserPhone.builder()
-                .id(userPhone.getId())
-                .number(userPhone.getNumber())
-                .countryCode(userPhone.getCountryCode())
-                .cityCode(userPhone.getCityCode())
-                .build();
-    }
-
-    public static UserPhone toEntity(DtoUserPhone userPhone) {
-        return UserPhone.builder()
+    public static DtoUserPhoneResponse fromEntity(UserPhone userPhone) {
+        return DtoUserPhoneResponse.builder()
                 .id(userPhone.getId())
                 .number(userPhone.getNumber())
                 .countryCode(userPhone.getCountryCode())

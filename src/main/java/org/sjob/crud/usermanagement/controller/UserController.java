@@ -8,8 +8,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import org.sjob.crud.usermanagement.dto.DtoUser;
 import org.sjob.crud.usermanagement.dto.reponse.DtoResponse;
+import org.sjob.crud.usermanagement.dto.reponse.DtoUserResponse;
+import org.sjob.crud.usermanagement.dto.request.DtoUserRequest;
 import org.sjob.crud.usermanagement.entity.User;
 import org.sjob.crud.usermanagement.service.UserService;
 import org.springdoc.core.annotations.RouterOperation;
@@ -58,21 +59,21 @@ public class UserController {
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findUserByEmail(@RequestParam(required = false) String name,
                                                   @RequestParam(required = false) String email) {
-        List<DtoUser> result = new ArrayList<>();
+        List<DtoUserResponse> result = new ArrayList<>();
 
         // Get By Email
         Optional.ofNullable(email)
                 .map(userService::findByEmail)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .ifPresent(user -> result.add(DtoUser.fromEntity(user)));
+                .ifPresent(user -> result.add(DtoUserResponse.fromEntity(user)));
         // Get By Name
         Optional.ofNullable(name)
                 .map(userService::findByName)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .filter(users -> !users.isEmpty())
-                .ifPresent(users -> users.forEach(user -> result.add(DtoUser.fromEntity(user))));
+                .ifPresent(users -> users.forEach(user -> result.add(DtoUserResponse.fromEntity(user))));
 
         if (result.isEmpty()) {
             return new ResponseEntity<>(DtoResponse.builder()
@@ -92,7 +93,7 @@ public class UserController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findUserByUuId(@PathVariable String id) {
 
-        Optional<DtoUser> dtoUser = userService.findById(id).map(DtoUser::fromEntity);
+        Optional<DtoUserResponse> dtoUser = userService.findById(id).map(DtoUserResponse::fromEntity);
         if (dtoUser.isPresent()) {
             return ResponseEntity.ok(dtoUser.get());
         }
@@ -109,10 +110,12 @@ public class UserController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> allUsers() {
 
-        Optional<List<DtoUser>> dtoUsers = userService.findAll();
+        Optional<List<User>> users = userService.findAll();
 
-        if (dtoUsers.isPresent()) {
-            return ResponseEntity.ok(dtoUsers.get());
+        if (users.isPresent()) {
+            List<DtoUserResponse> dtoUserResponses = new ArrayList<>();
+            users.get().forEach(user -> dtoUserResponses.add(DtoUserResponse.fromEntity(user)));
+            return ResponseEntity.ok(dtoUserResponses);
         }
         return new ResponseEntity<>(DtoResponse.builder()
                 .message("Users not found")
@@ -148,7 +151,7 @@ public class UserController {
                             @ApiResponse(responseCode = "201", description = "Created"),
                             @ApiResponse(responseCode = "400", description = "Bad request")}))
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> createUser(@Valid @RequestBody DtoUser dtoUser, BindingResult errors) {
+    public ResponseEntity<Object> createUser(@Valid @RequestBody DtoUserRequest dtoUser, BindingResult errors) {
 
         if (errors.hasErrors()) {
             FieldError fieldError = errors.getFieldErrors().get(0);
@@ -158,8 +161,8 @@ public class UserController {
         }
 
         try {
-            User newUser = userService.create(DtoUser.toEntity(dtoUser));
-            DtoUser newDtoUser = DtoUser.fromEntity(newUser);
+            User newUser = userService.create(dtoUser.toEntity());
+            DtoUserResponse newDtoUser = DtoUserResponse.fromEntity(newUser);
             return new ResponseEntity<>(newDtoUser, HttpStatusCode.valueOf(HttpStatus.CREATED.value()));
         } catch (Exception ex) {
             return new ResponseEntity<>(DtoResponse.builder()
@@ -175,7 +178,7 @@ public class UserController {
                             @ApiResponse(responseCode = "200", description = "Ok"),
                             @ApiResponse(responseCode = "400", description = "Bad request")}))
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateUser(@PathVariable String id, @Valid @RequestBody DtoUser dtoUser, BindingResult errors) {
+    public ResponseEntity<Object> updateUser(@PathVariable String id, @Valid @RequestBody DtoUserRequest dtoUser, BindingResult errors) {
 
         if (errors.hasErrors()) {
             FieldError fieldError = errors.getFieldErrors().get(0);
@@ -185,8 +188,8 @@ public class UserController {
         }
 
         try {
-            User newUser = userService.modify(id, DtoUser.toEntity(dtoUser));
-            DtoUser newDtoUser = DtoUser.fromEntity(newUser);
+            User newUser = userService.modify(id, dtoUser.toEntity());
+            DtoUserResponse newDtoUser = DtoUserResponse.fromEntity(newUser);
             return new ResponseEntity<>(newDtoUser, HttpStatusCode.valueOf(HttpStatus.OK.value()));
         } catch (Exception ex) {
             return new ResponseEntity<>(DtoResponse.builder()

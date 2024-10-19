@@ -5,7 +5,6 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import org.apache.logging.log4j.util.Strings;
-import org.sjob.crud.usermanagement.dto.DtoUser;
 import org.sjob.crud.usermanagement.entity.User;
 import org.sjob.crud.usermanagement.repository.UserRepository;
 import org.sjob.crud.usermanagement.service.UserService;
@@ -105,10 +104,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<List<DtoUser>> findAll() {
-        List<DtoUser> dtoUsers = new ArrayList<>();
-        Optional.of(userRepository.findAll()).ifPresent(users -> users.forEach(user -> dtoUsers.add(DtoUser.fromEntity(user))));
-        return Optional.of(dtoUsers);
+    public Optional<List<User>> findAll() {
+        return Optional.of(userRepository.findAll());
     }
 
 

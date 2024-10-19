@@ -7,13 +7,13 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.sjob.crud.usermanagement.dto.reponse.DtoResponse;
 import org.sjob.crud.usermanagement.dto.reponse.DtoUserResponse;
 import org.sjob.crud.usermanagement.dto.request.DtoUserRequest;
 import org.sjob.crud.usermanagement.entity.User;
 import org.sjob.crud.usermanagement.service.UserService;
-import org.springdoc.core.annotations.RouterOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -37,6 +37,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/users")
+@Tag(name = "User", description = "Api Management")
 public class UserController {
 
     private final UserService userService;
@@ -46,16 +47,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RouterOperation(
-            operation = @Operation(operationId = "search", summary = "Find User by Name or Email", tags = {"Users"},
-                    parameters = {
-                            @Parameter(in = ParameterIn.PATH, name = "name", description = "User Name", allowEmptyValue = true),
-                            @Parameter(in = ParameterIn.PATH, name = "email", description = "User Email", allowEmptyValue = true)},
-                    responses = {
-                            @ApiResponse(responseCode = "200", description = "Successful Operation",
-                                    content = @Content(schema = @Schema(implementation = List.class))),
-                            @ApiResponse(responseCode = "404", description = "User not found")
-                    }))
+    @Operation(operationId = "search", summary = "Find User by Name or Email", description = "",
+            parameters = {
+                    @Parameter(in = ParameterIn.PATH, name = "name", description = "User Name", allowEmptyValue = true),
+                    @Parameter(in = ParameterIn.PATH, name = "email", description = "User Email", allowEmptyValue = true)},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content(schema = @Schema(implementation = List.class))),
+                    @ApiResponse(responseCode = "404", description = "User not found")
+            })
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findUserByEmail(@RequestParam(required = false) String name,
                                                   @RequestParam(required = false) String email) {
@@ -83,13 +82,12 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
-    @RouterOperation(
-            operation = @Operation(operationId = "findUserByUuId", summary = "Find User by ID", tags = {"Users"},
-                    parameters = {@Parameter(in = ParameterIn.PATH, name = "id", description = "User Id")},
-                    responses = {
-                            @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = User.class))),
-                            @ApiResponse(responseCode = "400", description = "Invalid User ID supplied"),
-                            @ApiResponse(responseCode = "404", description = "User not found")}))
+    @Operation(operationId = "findUserByUuId", summary = "Find User by ID",
+            parameters = {@Parameter(in = ParameterIn.PATH, name = "id", description = "User Id")},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = DtoUserResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid User ID supplied"),
+                    @ApiResponse(responseCode = "404", description = "User not found")})
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findUserByUuId(@PathVariable String id) {
 
@@ -102,11 +100,10 @@ public class UserController {
                 .build(), HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value()));
     }
 
-    @RouterOperation(
-            operation = @Operation(operationId = "findAll", summary = "Find All Users", tags = {"Users"},
-                    parameters = {@Parameter(in = ParameterIn.PATH, name = "id", description = "User Id")},
-                    responses = {
-                            @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = List.class)))}))
+    @Operation(operationId = "findAll", summary = "Find All Users",
+            parameters = {@Parameter(in = ParameterIn.PATH, name = "id", description = "User Id")},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = List.class)))})
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> allUsers() {
 
@@ -122,12 +119,11 @@ public class UserController {
                 .build(), HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value()));
     }
 
-    @RouterOperation(
-            operation = @Operation(operationId = "deleteUserById", summary = "Delete User by ID", tags = {"Users"},
-                    parameters = {@Parameter(in = ParameterIn.PATH, name = "id", description = "User Id")},
-                    responses = {
-                            @ApiResponse(responseCode = "202", description = "Accepted"),
-                            @ApiResponse(responseCode = "404", description = "User not found")}))
+    @Operation(operationId = "deleteUserById", summary = "Delete User by ID",
+            parameters = {@Parameter(in = ParameterIn.PATH, name = "id", description = "User Id")},
+            responses = {
+                    @ApiResponse(responseCode = "202", description = "Accepted"),
+                    @ApiResponse(responseCode = "404", description = "User not found")})
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteUserByUuId(@PathVariable String id) {
         try {
@@ -144,12 +140,11 @@ public class UserController {
         }
     }
 
-    @RouterOperation(
-            operation = @Operation(operationId = "deleteUserById", summary = "Delete User by ID", tags = {"Users"},
-                    parameters = {@Parameter(in = ParameterIn.PATH, name = "id", description = "User Id")},
-                    responses = {
-                            @ApiResponse(responseCode = "201", description = "Created"),
-                            @ApiResponse(responseCode = "400", description = "Bad request")}))
+    @Operation(operationId = "deleteUserById", summary = "Delete User by ID",
+            parameters = {@Parameter(in = ParameterIn.PATH, name = "id", description = "User Id")},
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Created"),
+                    @ApiResponse(responseCode = "400", description = "Bad request")})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createUser(@Valid @RequestBody DtoUserRequest dtoUser, BindingResult errors) {
 
@@ -171,12 +166,11 @@ public class UserController {
         }
     }
 
-    @RouterOperation(
-            operation = @Operation(operationId = "deleteUserById", summary = "Delete User by ID", tags = {"Users"},
-                    parameters = {@Parameter(in = ParameterIn.PATH, name = "id", description = "User Id")},
-                    responses = {
-                            @ApiResponse(responseCode = "200", description = "Ok"),
-                            @ApiResponse(responseCode = "400", description = "Bad request")}))
+    @Operation(operationId = "deleteUserById", summary = "Delete User by ID",
+            parameters = {@Parameter(in = ParameterIn.PATH, name = "id", description = "User Id")},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Ok"),
+                    @ApiResponse(responseCode = "400", description = "Bad request")})
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updateUser(@PathVariable String id, @Valid @RequestBody DtoUserRequest dtoUser, BindingResult errors) {
 

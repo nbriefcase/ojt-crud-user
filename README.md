@@ -36,6 +36,26 @@ POST /api/v1/users
   - Mandatory fields: Email, Password, Phones.number.
   - Optional fields: Name, Phones, Phones.citycode, Phones.countrycode.
 - Response:
+```json
+{
+  "id": "d99e4fae-7791-494b-9fac-a8b678e14353",
+  "name": "Juan Rodriguez",
+  "email": "juan@rodriguez.org",
+  "created": "2024-10-19T07:50:10.425625900",
+  "modified": null,
+  "token": null,
+  "phones": [
+    {
+      "id": "c4762e1e-59a3-4cf1-9254-341c90eaa7d1",
+      "number": "1234567",
+      "citycode": "1",
+      "countrycode": null
+    }
+  ],
+  "last_login": null,
+  "isactive": true
+}
+```
 - Database Diagram
 
 ```mermaid
@@ -63,3 +83,15 @@ erDiagram
         string contrycode
     }
 ```
+- Password Criteria
+  - Regular Expression ``` ^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).{8,}$  ```
+
+  | Resource         | Purpose                                               | Description                                                     |
+  |------------------|-------------------------------------------------------|-----------------------------------------------------------------|
+  | ^                | Indicates the start of the chain                      | Creates a user record and optionally number phones can be added |
+  | (?=.*[a-z])      | Make sure there is at least one lowercase letter      | Creates a user record and optionally number phones can be added |
+  | (?=.*[A-Z])      | Make sure there is at least one uppercase letter      | Creates a user record and optionally number phones can be added |
+  | (?=.*\d)         | Make sure there is at least one digit                 | Creates a user record and optionally number phones can be added |
+  | (?=.*[@#$%^&+=]) | Ensures there is at least one symbol: @ # $ % ^ & + = | Creates a user record and optionally number phones can be added |
+  | .{8,}            | Indicates the minimum length, 8 characters.           | Creates a user record and optionally number phones can be added |
+  | $                | Indicates the end of the string                       | Creates a user record and optionally number phones can be added |

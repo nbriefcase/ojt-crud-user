@@ -12,7 +12,7 @@
   | GET /api/v1/users/{UudId}                                | Read and Get user by Uuid                 | return a JSON object with the user information.                 |
   | GET /api/v1/users/search?name=USER_NAME&email=USER_EMAIL | Read and Search users by name or email    | return a JSON object _**List**_ with the user information.      |
   | PUT /api/v1/users/{UudId}                                | Update user with number phones (optional) | Updates users record and numbers phones                         |
-  | DELETE /api/v1/users/{UudId}                             | Delete user with number phones (optional) | Updates users record and numbers phones                         |
+  | DELETE /api/v1/users/{UudId}                             | Delete user with number phones (optional) | Delete a user by UuId                                           |
 
 - Payloads:
 ```
@@ -86,12 +86,12 @@ erDiagram
 - Password Criteria
   - Regular Expression ``` ^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).{8,}$  ```
 
-  | Resource         | Purpose                                               | Description                                                     |
-  |------------------|-------------------------------------------------------|-----------------------------------------------------------------|
-  | ^                | Indicates the start of the chain                      | Creates a user record and optionally number phones can be added |
-  | (?=.*[a-z])      | Make sure there is at least one lowercase letter      | Creates a user record and optionally number phones can be added |
-  | (?=.*[A-Z])      | Make sure there is at least one uppercase letter      | Creates a user record and optionally number phones can be added |
-  | (?=.*\d)         | Make sure there is at least one digit                 | Creates a user record and optionally number phones can be added |
-  | (?=.*[@#$%^&+=]) | Ensures there is at least one symbol: @ # $ % ^ & + = | Creates a user record and optionally number phones can be added |
-  | .{8,}            | Indicates the minimum length, 8 characters.           | Creates a user record and optionally number phones can be added |
-  | $                | Indicates the end of the string                       | Creates a user record and optionally number phones can be added |
+  | Resource         | Description                                           |  |
+  |------------------|-------------------------------------------------------|--|
+  | ^                | Indicates the start of the chain                      |  |
+  | (?=.*[a-z])      | Make sure there is at least one lowercase letter      |  |
+  | (?=.*[A-Z])      | Make sure there is at least one uppercase letter      |  |
+  | (?=.*\d)         | Make sure there is at least one digit                 |  |
+  | (?=.*[@#$%^&+=]) | Ensures there is at least one symbol: @ # $ % ^ & + = |  |
+  | .{8,}            | Indicates the minimum length, 8 characters.           |  |
+  | $                | Indicates the end of the string                       |  |

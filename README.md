@@ -1,3 +1,22 @@
+Lista de compras
+---------------
+* Frutas
+  * Manzanas
+  * Naranjas
+  * Uvas
+* Lácteos
+  * Leche
+  * Queso
+
+
+
+
+
+
+
+
+
+
 
 ## Requirement
 - Java 17+
